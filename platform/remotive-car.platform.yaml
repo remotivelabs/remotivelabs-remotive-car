@@ -1,0 +1,25 @@
+schema: remotive-topology-platform:0.17
+
+includes:
+  - someip.platform.yaml
+
+channels:
+  DriverCan:
+    database: ./databases/driver_can.dbc
+    type: can
+    baudrate: 500000
+
+  BodyCan:
+    database: ./databases/body_can.dbc
+    type: can
+    baudrate: 500000
+
+  ChassisCan:
+    database: ./databases/chassis_can.dbc
+    type: can
+    baudrate: 500000
+    baudrate_fd: 8000000
+
+  RearLightLIN:
+    database: ./databases/rearlight.ldf
+    type: lin

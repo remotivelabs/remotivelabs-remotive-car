@@ -1,0 +1,228 @@
+# RemotiveCar example
+
+The purpose of the example is to show a somewhat realistic topology where multiple ECUs communicate over CAN, LIN and a SOME/IP network. This includes:
+
+- `BehavioralModel` in python
+- `BehavioralModel` from an FMU
+- `ECUMock`
+- Testcases with pytest
+- Testcases with behave
+- Jupyter notebook
+- CAN communication over UDP or CAN
+- SOME/IP
+- Android emulator
+- How to structure a more complex topology
+
+Notice while the example is showing ECUs possible present in a real vehicle, the signals and implementations are simplified to make the example easy to understand. The goal is not intended to be fully realistic.
+
+## Host setup
+On Linux, this example requires that you run `RemotiveBus` service on your machine to enable CAN networks in Docker, see installation instructions [here](https://developer.remotivelabs.com/docs/remotive-bus/install) or read about how to do this over udp in the [documentation](https://developer.remotivelabs.com/docs/remotive-topology/usage/instance/networks/can).
+
+## Project structure
+Below is an overview of the project's directory layout and its main components:
+```
+common/        shared fragments: the 3D car, the Jupyter notebook
+docs/          Sphinx-Needs documentation
+instances/     the topologies, one folder each, composed from instances/ecus
+instances/ecus/   one folder per ECU, one file per way of running it (mock, python, fmu, ...)
+models/        the ECU implementations: Python packages, the FMU, the cluster image
+platform/      the network: channels and signal databases
+tests/         the test runners (pytest, behave) included by the instances
+```
+
+### Common
+The [common](common) directory contains shared components that can be used across different instances.
+
+### Docs 
+The [docs](docs) directory contains **Sphinx-Needs** documentation that adds ISO 26262-style traceability to this example. Notice that this is just a limited sample of what the full documentation would look like.
+
+#### Jupyter notebook
+Jupyter allows you to interact with the input ECUs using a graphical interface. In this example we include it in the main instance and start it by adding `--profile jupyter` as argument to docker compose. See more about how it is instantiated [here](instances/hello_world/README.md).
+
+### Instances
+The [instances](instances) directory contains different deployment configurations for the platform. These are used to start different subsets of the platform.
+
+These instances serve as the input sources from which the final system setup is generated. They are commonly called `main.instance.yaml`.
+
+A main instance is little more than a list of includes: the platform, one file per ECU from [instances/ecus](instances/ecus/README.md) and the shared fragments from [common](common) and [tests](tests). Every ECU has its own folder there with one file per way of running it, `mock`, `python`, `fmu`, `playback` and so on, so what an ECU is in an instance is a single line, and two instances that differ by one ECU differ by one line. [instances/ecus/README.md](instances/ecus/README.md) has the table of what each instance uses.
+
+The example contains four main instances
+> :link: [RemotiveCar Hello World instance](instances/hello_world/README.md)<br>
+> :link: [RemotiveCar FMU instance](instances/fmu/README.md)<br>
+> :link: [Instance with android emulator](instances/android/README.md)<br>
+> :link: [Instance with an instrument cluster](instances/agl_cluster/README.md)<br>
+
+The hello world instance is the most suitable starting point, the FMU instance is the same topology with the `BCM` implemented as an FMU instead of a python model, the instance with android emulator shows how to integrate a topology with the android emulator, and the cluster instance runs a real instrument cluster (derived from the AGL cluster demo) as the `DIM` ECU on CAN.
+There is also an instance that integrates with a physical steering wheel, replacing the `SCCM` mock with a behavioral model.
+Note that running the steering wheel example requires hardware.
+
+### Models (ECU implementation)
+The [models](models) directory contains the implementations of the ECUs: a Python package per model, the BCM FMU and the instrument cluster image. How a model is run as an ECU is not in `models` but in [instances/ecus](instances/ecus/README.md): the container, its command and environment, in a file named after the implementation.
+
+An ECU can have more than one implementation. The `BCM` has both a [python behavioral model](models/bcm/python/bcm) and an [FMU](models/bcm/fmu/bcm), selected by including either [BCM/python.instance.yaml](instances/ecus/BCM/python.instance.yaml) or [BCM/fmu.instance.yaml](instances/ecus/BCM/fmu.instance.yaml). The [hello world](instances/hello_world/main.instance.yaml) and [FMU](instances/fmu/main.instance.yaml) instances differ by that line and the BMS, a model in one and a mock in the other.
+
+#### Running unit tests
+It is important to test early, and local unit/integration tests are important tools to achieve this. As each python model is its separate package it is easy to write unit tests. For the a bit mor complicated model `BCM` there is tests located here [models/bcm/python/tests](models/bcm/python/tests).
+The `BCM` python project uses `uv`, see installation [here](https://docs.astral.sh/uv/getting-started/installation/) or simply do
+```bash
+pip install uv
+```
+
+Run the unit tests from `models/bcm/python/bcm` folder.
+First do
+```bash
+uv sync
+```
+
+Then run
+```bash
+uv run poe test
+```
+
+### Platform
+The [platform](platform) directory defines the vehicle architecture and communication setup.
+
+### Platform overview
+
+The platform is defined in [remotive-car.platform.yaml](platform/remotive-car.platform.yaml) and the diagram and table below describes the components in the platform on a high level.
+
+```mermaid
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
+    classDiagram
+
+    class DEVS2 {
+    }
+
+    class RL {
+    }
+
+    class RLCM {
+    }
+
+    class DIM {
+    }
+
+    class FLCM {
+    }
+
+    class HVAC {
+    }
+
+    class TCU {
+    }
+
+    class SCCM {
+    }
+
+    class BCM {
+    }
+
+    class PAM {
+    }
+
+    class GWM {
+    }
+
+    class ABS {
+    }
+
+    class BMS {
+    }
+
+    class PCM {
+    }
+
+    class IHU {
+    }
+
+    class BodyCan {
+        <<CAN>>
+    }
+
+    class DriverCan {
+        <<CAN>>
+    }
+
+    class ChassisCan {
+        <<CAN>>
+    }
+
+    class SOMEIP {
+        <<SOMEIP>>
+    }
+
+    class RearLightLIN {
+        <<LIN>>
+    }
+
+    DEVS2 -- RearLightLIN
+
+    RL -- RearLightLIN
+
+    RLCM -- RearLightLIN
+    RLCM -- BodyCan
+
+    ABS -- ChassisCan
+
+    BMS -- ChassisCan
+
+    PCM -- ChassisCan
+
+    DIM -- BodyCan
+
+    FLCM -- BodyCan
+
+    PAM -- BodyCan
+
+    HVAC -- BodyCan
+
+    BCM -- BodyCan
+    BCM -- DriverCan
+
+    GWM -- BodyCan
+    GWM -- ChassisCan
+    GWM -- SOMEIP
+
+    IHU -- SOMEIP
+
+    SCCM -- DriverCan
+
+    TCU -- ChassisCan
+
+```
+
+| ECU  | Name                           | Description                                             |
+| ---- | ------------------------------ | ------------------------------------------------------- |
+| ABS | Anti-lock Braking System        | Provides speed                                   |
+| BCM  | Body Control Module            | Controls vehicle body electronics (lights, locks, etc.) |
+| BMS  | Battery Management System      | Provides battery state of charge and pack current       |
+| DEVS2  | | |
+| DIM  | Driver Information Module      | Manages instrument cluster and driver displays          |
+| FLCM | Front Light Control Module     | Controls front lighting system                          |
+| GWM  | Gateway Module                 | Routes communication between different vehicle networks |
+| HVAC | Heating, Ventilation, and Air Conditioning | Receives temperature control from Android infotainment.   |
+| IHU  | Infotainment Head Unit         | Manages infotainment and user interface systems         |
+| PAM | Parking Assistant Module | Provides access to proximity sensor values |
+| PCM | Powertrain Control Module | Provides motor speed and torque |
+| RL | Rear Light       | Provides access to the rear light                                   |
+| RLCM | Rear Light Control Module      | Controls rear lighting system                           |
+| SCCM | Steering Column Control Module | Receives input from steering wheel, pedals and buttons  |
+| TCU | Telematics Control Unit       | Provides GNSS location                                   |
+
+### Tests
+The test suite is implemented using the RemotiveLabs ECU framework. The [tester.instance.yaml](tests/tester.instance.yaml) instance may be included by other main.instance.yaml files. It includes scenario based tests using Behave + Gherkin and test cases using pytest.
+
+## Use cases
+To understand how you can use RemotiveTopology, this example includes a number of different use cases, see [USECASES.md](https://github.com/remotivelabs/remotivelabs-topology-examples/blob/main/USECASES.md).
+
+<!--
+TODO: Add a proper scripted-namespace example demonstrating a broker scripted namespace
+(e.g. VSS translation via simple_mapping/Lua). Cover both shapes, mirroring the CAN/SOME-IP
+examples: a standalone subscribe loop and a BehavioralModel using ScriptedNamespace +
+create_input_handler. Pair it with framework snippets scripted_namespace.py /
+scripted_namespace_bm.py in remotivelabs-topology (currently missing).
+-->

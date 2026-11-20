@@ -1,0 +1,30 @@
+schema: remotive-recording-session:0.2
+
+name: Tesla M Drive 2025-07-30
+start_time: 1788354628234566us
+end_time: 1788354688234566us
+
+files:
+  - location: ./m_drive_2025-07-30/log_vss_6.0.csv
+    type: recording
+    default_device: VSS
+
+  - location: ./m_drive_2025-07-30/back.mp4
+    name: rear
+    type: video
+
+  - location: ./m_drive_2025-07-30/front.mp4
+    name: front
+    type: video
+
+  - location: ./m_drive_2025-07-30/left.mp4
+    name: left
+    type: video
+
+  - location: ./m_drive_2025-07-30/right.mp4
+    name: right
+    type: video
+
+mapping:
+  platform:
+    - ./platform/topology.platform.yaml

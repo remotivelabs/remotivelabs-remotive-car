@@ -1,0 +1,17 @@
+schema: remotive-topology-instance:0.17
+
+containers:
+  jupyter:
+    profiles: [jupyter]
+    build:
+      target: jupyter
+      dockerfile: ../../Dockerfile
+    volumes:
+      - car.ipynb:/app/car.ipynb
+      - images:/app/images
+      - jupyter_server_config.py:/etc/jupyter/jupyter_server_config.py
+    working_dir: /app
+    ports:
+      - "8888:8888"
+    environment:
+      - REMOTIVE_BROKER_URL=http://topology-broker.com:50051

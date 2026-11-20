@@ -1,0 +1,20 @@
+schema: remotive-topology-instance:0.17
+
+name: remotive_car_android
+
+# The car around an Android head unit: BCM, GWM and IHU as Python models and
+# the driving ECUs replaying a recorded drive (local_playback.instance.yaml).
+# Add one of the files next to this one to attach Android to the IHU: an
+# emulator in Docker or on the host, or Cuttlefish.
+
+platform:
+  includes:
+    - ../../platform/remotive-car.platform.yaml
+
+includes:
+  - ../ecus/BCM/python.instance.yaml
+  - ../ecus/GWM/python.instance.yaml
+  - ../ecus/IHU/python.instance.yaml
+  - ../ecus/HVAC/broker.instance.yaml
+  - ../../common/3d_car/3d_car.instance.yaml
+  - ./local_playback.instance.yaml

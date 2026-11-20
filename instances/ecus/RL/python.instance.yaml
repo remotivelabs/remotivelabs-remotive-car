@@ -1,0 +1,23 @@
+schema: remotive-topology-instance:0.17
+
+# RL, the rear light, as the Python behavioral model in models/rl/python: a LIN
+# slave on RearLightLIN that lights the lamps the RLCM asks for.
+
+platform:
+  includes:
+    - ../../../platform/remotive-car.platform.yaml
+
+ecus:
+  RL:
+    channels:
+      RearLightLIN:
+    models:
+      rl:
+        type: container
+        container:
+          build:
+            args:
+              - MODEL_PATH=rl/python
+            target: model
+            dockerfile: ../../../Dockerfile
+          command: python -m rl

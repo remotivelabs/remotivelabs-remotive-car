@@ -1,0 +1,27 @@
+schema: remotive-topology-instance:0.17
+
+includes:
+  - ../ecus/IHU/android_emulator.instance.yaml
+
+ecus:
+  IHU:
+    models:
+      ihu:
+        type: container
+        container:
+          environment:
+            - ANDROID_ADB_SERVER_PORT=${ANDROID_ADB_SERVER_PORT:-5037}
+            - ANDROID_ADB_SERVER_ADDRESS=${ANDROID_ADB_SERVER_ADDRESS:-android_emulator}
+            - ANDROID_EMULATOR_ADDRESS=${ANDROID_EMULATOR_ADDRESS:-android_emulator}
+
+containers:
+  android_emulator:
+    build:
+      dockerfile: ./android_emulator/Dockerfile
+    working_dir: /app
+    ports:
+      - "8085:8080"
+    devices:
+      - /dev/kvm
+    environment:
+      - ANDROID_EMULATOR_AUTH=${ANDROID_EMULATOR_AUTH:-}

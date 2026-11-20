@@ -1,0 +1,24 @@
+schema: remotive-topology-instance:0.17
+
+# IHU as the Python behavioral model in models/ihu/python without a device
+# attached: it consumes the SOME/IP events and logs them. The other files in
+# this folder bridge the same model to an Android emulator or to Cuttlefish.
+
+platform:
+  includes:
+    - ../../../platform/remotive-car.platform.yaml
+
+ecus:
+  IHU:
+    models:
+      ihu:
+        type: container
+        container:
+          build:
+            args:
+              - MODEL_PATH=ihu/python
+            target: model
+            dockerfile: ../../../Dockerfile
+          command: python -m ihu
+          environment:
+            - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python

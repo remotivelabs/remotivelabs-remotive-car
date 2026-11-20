@@ -1,0 +1,29 @@
+schema: remotive-topology-instance:0.17
+
+# A recorded drive replayed on the bus: the playback container streams the
+# recording to the broker and the ECUs below publish their part of it as the
+# frames the rest of the car expects. Playback runs under the playback profile.
+
+platform:
+  includes:
+    - ../../recordings/platform/topology.platform.yaml
+
+includes:
+  - ../ecus/TCU/playback.instance.yaml
+  - ../ecus/ABS/playback.instance.yaml
+  - ../ecus/SCCM/playback.instance.yaml
+  - ../ecus/BMS/playback.instance.yaml
+  - ../ecus/PCM/playback.instance.yaml
+
+containers:
+  playback:
+    profiles: [playback]
+    build:
+      dockerfile: Dockerfile
+    working_dir: /app
+    command: python -m playback.local -s --recording-session ./tesla.recordingsession.yaml
+    depends_on:
+      - topology-broker.com
+
+settings:
+  recordings: ../../recordings/

@@ -1,0 +1,29 @@
+schema: remotive-topology-instance:0.17
+
+# IHU as the Python model bridging the SOME/IP events to an Android emulator
+# over adb. Where the emulator runs (in Docker or on the host) is set by the
+# instance that includes this file, see ../../android.
+
+platform:
+  includes:
+    - ../../../platform/remotive-car.platform.yaml
+
+ecus:
+  IHU:
+    models:
+      ihu:
+        type: container
+        container:
+          build:
+            args:
+              - MODEL_PATH=ihu/python
+            target: ihu_android
+            dockerfile: ../../../Dockerfile
+          command: python -m ihu
+          environment:
+            - VIRTUAL_DEVICE_TYPE=android_emulator
+            - ANDROID_EMULATOR_AUTH=${ANDROID_EMULATOR_AUTH:-}
+            - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+            - ANDROID_EMULATOR_NAME=${ANDROID_EMULATOR_NAME:-}
+          extra_hosts:
+            - "host.docker.internal:host-gateway"

@@ -1,0 +1,20 @@
+schema: remotive-topology-instance:0.17
+
+name: remotive_car_agl_cluster
+
+# The DIM as an instrument cluster container, with mocks for the ECUs that send
+# what it displays. Every frame the cluster consumes is set directly on a mock,
+# from the dashboard, the command line or the tests, with no behavioral model in
+# between. The full car around the cluster is the Android instance with the DIM
+# cluster file added, see README.md.
+
+platform:
+  includes:
+    - ../../platform/remotive-car.platform.yaml
+
+includes:
+  - ../ecus/DIM/agl_cluster.instance.yaml
+  - ../ecus/ABS/mock.instance.yaml
+  - ../ecus/BMS/mock.instance.yaml
+  - ../ecus/BCM/mock.instance.yaml
+  - ../../common/3d_car/3d_car.instance.yaml

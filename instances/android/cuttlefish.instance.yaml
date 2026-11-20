@@ -1,0 +1,9 @@
+schema: remotive-topology-instance:0.17
+
+# Android as a Cuttlefish device in the IHU container (../ecus/IHU/cuttlefish),
+# with the Android tests as the tester. Add to main.instance.yaml together with
+# cuttlefish.compose.yaml, see README.md.
+
+includes:
+  - ../ecus/IHU/cuttlefish.instance.yaml
+  - ../../tests/pytest/android/cuttlefish.instance.yaml

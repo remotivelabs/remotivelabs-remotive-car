@@ -1,0 +1,16 @@
+schema: remotive-topology-instance:0.17
+
+containers:
+  tester:
+    profiles: [tester]
+    build:
+      target: tester
+      dockerfile: ../../../Dockerfile
+    volumes:
+      - ..:/app
+    working_dir: /app
+    command: "pytest --broker_url=http://topology-broker.com:50051 --android_device_host=ihu --android_performance_level=${ANDROID_PERFORMANCE_LEVEL:-high} -m android -s -vv"
+    depends_on:
+      - bcm
+      - gwm
+      - ihu

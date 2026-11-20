@@ -1,0 +1,39 @@
+# Published as .gitignore in remotivelabs-remotive-car (copied by export.py).
+# Not named .gitignore here, so it doesn't affect the monorepo.
+
+# Generated topologies and docs (`remotive topology build ... build`, `sphinx-build ... build/html`)
+build/
+
+# RemotiveTopology workspace cache
+.remotive/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Sphinx documentation
+docs/_build/
+
+# Android: user-provided APKs (instances/android/cuttlefish/apks and state keep their own .gitignore)
+*.apk
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+
+# Downloaded license file for RemotiveBroker
+REMOTIVEBROKER_LICENSE

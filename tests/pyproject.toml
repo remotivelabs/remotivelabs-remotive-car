@@ -1,0 +1,60 @@
+[project]
+name = "remotivelabs-topology-remotive-car-integration-test-example"
+description = "RemotiveTopology Remotive Car integration test example"
+version = "1.0.0"
+license = "MIT"
+
+requires-python = ">=3.10,<4.0"
+
+dependencies = [
+  "pytest==8.4.2",
+  "pytest-asyncio==1.0.0",
+  "gherkin-official >=30.0.4",
+  "behave >=1.2.6",
+  "remotivelabs-topology~=0.23.0",
+  "adb-shell==0.4.4",
+]
+
+[dependency-groups]
+dev = ["poethepoet>=0.34.0", "ruff>=0.11.10", "mypy>=1.14.1"]
+
+[tool.poe.tasks]
+format = [{ cmd = "ruff format ." }, { cmd = "ruff check --fix ." }]
+ruff = [{ cmd = "ruff check ." }, { cmd = "ruff format --check --diff ." }]
+mypy = [{ cmd = "mypy . --pretty" }]
+lint = ["ruff", "mypy"]
+test = { cmd = "echo no test in project, to run integration test, run `uv run pytest` or `uv run behave`" }
+
+[tool.ruff]
+extend = "../ruff.toml"
+
+[tool.mypy]
+python_version = "3.10"
+disallow_untyped_calls = false
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+hide_error_codes = false
+
+[tool.behave]
+paths = ["behave/features"]
+lang = "en"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["pytest"]
+cache_dir = "/tmp/.pytest_cache"
+addopts = "-m 'not android and not cluster'"
+markers = [
+  "android: marks tests that require an android device",
+  "cluster: marks tests that require an instrument cluster as the DIM",
+]
+
+[[tool.mypy.overrides]]
+module = ["behave.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["adb_shell.*"]
+ignore_missing_imports = true
