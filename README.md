@@ -4,6 +4,13 @@ By following the steps below, you will generate and run an instance of a topolog
 RemotiveCar is the larger example of [RemotiveTopology](https://developer.remotivelabs.com/docs/remotive-topology). For smaller examples, start with
 [remotivelabs-topology-examples](https://github.com/remotivelabs/remotivelabs-topology-examples).
 
+It has 14 ECUs, Android, an instrument cluster, a 3D car and Jupyter:
+
+- [Android](./instances/android/README.md)
+- [Instrument cluster](./instances/agl_cluster/README.md)
+
+![RemotiveCar Android Example](./instances/android/docs/RemotiveTopology_ans_AAOS.gif)
+
 ## Prerequisites
 
 To run this example, you'll need:
