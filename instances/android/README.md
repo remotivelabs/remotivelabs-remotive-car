@@ -267,8 +267,8 @@ reads the CAN buses over SocketCAN, so it needs RemotiveBus on the host.
 
 ### Use cases
 
-[Cuttlefish](https://github.com/remotivelabs/remotivelabs-topology-examples/blob/main/usecases/ANDROID_CUTTLEFISH.md)
-[Emulator](https://github.com/remotivelabs/remotivelabs-topology-examples/blob/main/usecases/ANDROID_EMULATOR.md)
+[Cuttlefish](../../usecases/ANDROID_CUTTLEFISH.md)
+[Emulator](../../usecases/ANDROID_EMULATOR.md)
 
 ### Troubleshoot
 

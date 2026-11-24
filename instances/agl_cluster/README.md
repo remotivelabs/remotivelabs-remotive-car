@@ -9,7 +9,7 @@ cares what runs inside: replace the container with any other cluster that speaks
 unchanged.
 
 The cluster is a Qt/QML application derived from the [AGL cluster demo dashboard](https://gerrit.automotivelinux.org/gerrit/admin/repos/apps/agl-cluster-demo-dashboard),
-with the same look as the instrument cluster of the [3D car](https://github.com/remotivelabs/remotivelabs-topology-examples/blob/main/usecases/3D.md). It is served as a web page,
+with the same look as the instrument cluster of the [3D car](../../usecases/3D.md). It is served as a web page,
 on its own or embedded in the 3D car.
 
 > :link: [main.instance.yaml](main.instance.yaml)<br>
@@ -111,7 +111,7 @@ The cluster is available at <http://localhost:6080>.
 
 ### Cluster in the 3D car
 
-The [3D car](https://github.com/remotivelabs/remotivelabs-topology-examples/blob/main/usecases/3D.md) can embed a web page as the instrument cluster, the same way it embeds the
+The [3D car](../../usecases/3D.md) can embed a web page as the instrument cluster, the same way it embeds the
 Android screen. It takes the page from the `clusterIframe` query parameter, so open the 3D car with the cluster
 page baked into the link:
 

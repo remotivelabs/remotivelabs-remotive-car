@@ -217,7 +217,7 @@ config:
 The test suite is implemented using the RemotiveLabs ECU framework. The [tester.instance.yaml](tests/tester.instance.yaml) instance may be included by other main.instance.yaml files. It includes scenario based tests using Behave + Gherkin and test cases using pytest.
 
 ## Use cases
-To understand how you can use RemotiveTopology, this example includes a number of different use cases, see [USECASES.md](https://github.com/remotivelabs/remotivelabs-topology-examples/blob/main/USECASES.md).
+To understand how you can use RemotiveTopology, this example includes a number of different use cases, see [USECASES.md](USECASES.md).
 
 <!--
 TODO: Add a proper scripted-namespace example demonstrating a broker scripted namespace

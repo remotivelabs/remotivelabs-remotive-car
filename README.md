@@ -40,7 +40,7 @@ The `BCM` of this example is also available as an FMU, see the [FMU instance](./
 Detailed documentation is available here:
 
 - [Overview](./DOCS.md) - Platform and file structure
-- [Example usecases](https://github.com/remotivelabs/remotivelabs-topology-examples/blob/main/USECASES.md) - The usecases this example is showing
+- [Use cases](USECASES.md) - What this example shows, one use case at a time
 
 ## License
 
